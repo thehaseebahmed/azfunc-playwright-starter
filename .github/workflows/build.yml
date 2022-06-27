@@ -1,0 +1,30 @@
+name: Build Azure Functions (Node JS)
+
+on:
+  push:
+    branches: [main, master]
+
+env:
+  AZURE_FUNCTIONAPP_NAME: "tha-playwright-starter" # set this to your application's name
+  AZURE_FUNCTIONAPP_PACKAGE_PATH: "." # set this to the path to your web app project, defaults to the repository root
+  NODE_VERSION: "16.x" # set this to the node version to use (supports 8.x, 10.x, 12.x, 14.x)
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Checkout GitHub Action"
+        uses: actions/checkout@v2
+
+      - name: Setup Node ${{ env.NODE_VERSION }} Environment
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: "Build Azure Functions"
+        shell: bash
+        run: |
+          pushd './${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}'
+          npm install
+          npm run build
+          popd
